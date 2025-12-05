@@ -36,18 +36,9 @@ const Dashboard = () => {
   }, [searchParams]);
 
   const getTopicLabels = () => {
-    const labels: string[] = [];
-    eurovocTopics.forEach((topic) => {
-      if (topics.includes(topic.id)) {
-        labels.push(topic.label);
-      }
-      topic.children?.forEach((child) => {
-        if (topics.includes(child.id)) {
-          labels.push(child.label);
-        }
-      });
-    });
-    return labels;
+    return eurovocTopics
+      .filter((topic) => topics.includes(topic.id))
+      .map((topic) => topic.label);
   };
 
   const getLanguageLabels = () => {
