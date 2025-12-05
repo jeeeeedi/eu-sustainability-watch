@@ -1,88 +1,111 @@
-// Eurovoc descriptors related to sustainability and corporate compliance
+// Official EuroVoc domains - the EU's multilingual thesaurus
 // Source: https://eur-lex.europa.eu/browse/eurovoc.html
 
 export const eurovocTopics = [
   {
-    id: "sustainable-development",
-    label: "Sustainable Development",
-    descriptor: "sustainable development",
-    children: [
-      { id: "green-deal", label: "European Green Deal", descriptor: "European Green Deal" },
-      { id: "climate-neutrality", label: "Climate Neutrality", descriptor: "climate neutrality" },
-      { id: "circular-economy", label: "Circular Economy", descriptor: "circular economy" },
-    ]
+    id: "04",
+    label: "Politics",
+    descriptor: "POLITICS",
   },
   {
-    id: "environment",
-    label: "Environment",
-    descriptor: "environment",
-    children: [
-      { id: "climate-change", label: "Climate Change", descriptor: "climate change" },
-      { id: "pollution", label: "Pollution Control", descriptor: "pollution control" },
-      { id: "biodiversity", label: "Biodiversity", descriptor: "biodiversity" },
-      { id: "waste-management", label: "Waste Management", descriptor: "waste management" },
-      { id: "water-management", label: "Water Management", descriptor: "water management" },
-    ]
+    id: "08",
+    label: "International Relations",
+    descriptor: "INTERNATIONAL RELATIONS",
   },
   {
-    id: "energy",
-    label: "Energy",
-    descriptor: "energy",
-    children: [
-      { id: "renewable-energy", label: "Renewable Energy", descriptor: "renewable energy" },
-      { id: "energy-efficiency", label: "Energy Efficiency", descriptor: "energy efficiency" },
-      { id: "energy-policy", label: "Energy Policy", descriptor: "energy policy" },
-    ]
+    id: "10",
+    label: "European Union",
+    descriptor: "EUROPEAN UNION",
   },
   {
-    id: "corporate-governance",
-    label: "Corporate Governance",
-    descriptor: "corporate governance",
-    children: [
-      { id: "corporate-social-responsibility", label: "Corporate Social Responsibility (CSR)", descriptor: "corporate social responsibility" },
-      { id: "sustainability-reporting", label: "Sustainability Reporting", descriptor: "sustainability reporting" },
-      { id: "due-diligence", label: "Due Diligence", descriptor: "due diligence" },
-    ]
+    id: "12",
+    label: "Law",
+    descriptor: "LAW",
   },
   {
-    id: "financial-services",
-    label: "Financial Services & ESG",
-    descriptor: "financial services",
-    children: [
-      { id: "sustainable-finance", label: "Sustainable Finance", descriptor: "sustainable finance" },
-      { id: "eu-taxonomy", label: "EU Taxonomy", descriptor: "taxonomy" },
-      { id: "green-bonds", label: "Green Bonds", descriptor: "green bond" },
-    ]
+    id: "16",
+    label: "Economics",
+    descriptor: "ECONOMICS",
   },
   {
-    id: "transport",
+    id: "20",
+    label: "Trade",
+    descriptor: "TRADE",
+  },
+  {
+    id: "24",
+    label: "Finance",
+    descriptor: "FINANCE",
+  },
+  {
+    id: "28",
+    label: "Social Questions",
+    descriptor: "SOCIAL QUESTIONS",
+  },
+  {
+    id: "32",
+    label: "Education and Communications",
+    descriptor: "EDUCATION AND COMMUNICATIONS",
+  },
+  {
+    id: "36",
+    label: "Science",
+    descriptor: "SCIENCE",
+  },
+  {
+    id: "40",
+    label: "Business and Competition",
+    descriptor: "BUSINESS AND COMPETITION",
+  },
+  {
+    id: "44",
+    label: "Employment and Working Conditions",
+    descriptor: "EMPLOYMENT AND WORKING CONDITIONS",
+  },
+  {
+    id: "48",
     label: "Transport",
-    descriptor: "transport",
-    children: [
-      { id: "sustainable-transport", label: "Sustainable Transport", descriptor: "sustainable transport" },
-      { id: "electric-vehicles", label: "Electric Vehicles", descriptor: "electric vehicle" },
-      { id: "emissions-standards", label: "Emissions Standards", descriptor: "emission standard" },
-    ]
+    descriptor: "TRANSPORT",
   },
   {
-    id: "industry",
+    id: "52",
+    label: "Environment",
+    descriptor: "ENVIRONMENT",
+  },
+  {
+    id: "56",
+    label: "Agriculture, Forestry and Fisheries",
+    descriptor: "AGRICULTURE, FORESTRY AND FISHERIES",
+  },
+  {
+    id: "60",
+    label: "Agri-Foodstuffs",
+    descriptor: "AGRI-FOODSTUFFS",
+  },
+  {
+    id: "64",
+    label: "Production, Technology and Research",
+    descriptor: "PRODUCTION, TECHNOLOGY AND RESEARCH",
+  },
+  {
+    id: "66",
+    label: "Energy",
+    descriptor: "ENERGY",
+  },
+  {
+    id: "68",
     label: "Industry",
-    descriptor: "industry",
-    children: [
-      { id: "industrial-emissions", label: "Industrial Emissions", descriptor: "industrial emission" },
-      { id: "ecodesign", label: "Ecodesign", descriptor: "ecodesign" },
-      { id: "green-manufacturing", label: "Green Manufacturing", descriptor: "sustainable production" },
-    ]
+    descriptor: "INDUSTRY",
   },
   {
-    id: "agriculture",
-    label: "Agriculture & Food",
-    descriptor: "agriculture",
-    children: [
-      { id: "sustainable-agriculture", label: "Sustainable Agriculture", descriptor: "sustainable agriculture" },
-      { id: "organic-farming", label: "Organic Farming", descriptor: "organic farming" },
-      { id: "food-waste", label: "Food Waste", descriptor: "food waste" },
-    ]
+    id: "72",
+    label: "Geography",
+    descriptor: "GEOGRAPHY",
+  },
+  {
+    id: "76",
+    label: "International Organisations",
+    descriptor: "INTERNATIONAL ORGANISATIONS",
   },
 ];
 
