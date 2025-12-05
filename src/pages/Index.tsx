@@ -111,7 +111,7 @@ const Index = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button variant="eu" size="lg" className="flex-1" onClick={handleSearch} disabled={isSearching}>
+              <Button variant="eu" size="lg" onClick={handleSearch} disabled={isSearching} className="flex-1 text-brand-cream bg-primary">
                 {isSearching ? <>
                     <span className="animate-pulse">Searching EUR-Lex...</span>
                   </> : <>
@@ -119,10 +119,7 @@ const Index = () => {
                     Search Regulations
                   </>}
               </Button>
-              <Button variant="eu-outline" size="lg" onClick={() => navigate("/dashboard")}>
-                View Dashboard
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+              
             </div>
           </CardContent>
         </Card>
