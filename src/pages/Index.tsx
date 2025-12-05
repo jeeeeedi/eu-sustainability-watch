@@ -73,7 +73,7 @@ const Index = () => {
           <div className="mx-auto max-w-3xl text-center space-y-6 animate-fade-in">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight font-sans">
               Stay Ahead of{" "}
-              <span className="text-gradient">EU Sustainability</span>{" "}
+              {" "}
               Regulations
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
