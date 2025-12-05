@@ -64,7 +64,7 @@ const Dashboard = () => {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="font-sans">
               <Download className="h-4 w-4 mr-2" />
               Export
             </Button>

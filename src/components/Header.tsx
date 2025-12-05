@@ -22,7 +22,7 @@ const Header = () => {
             <span className="text-lg font-bold text-foreground leading-tight font-sans">
               EU Sustainability
             </span>
-            <span className="text-xs text-muted-foreground leading-tight">
+            <span className="text-xs text-muted-foreground leading-tight font-sans">
               Regulations Tracker
             </span>
           </div>
