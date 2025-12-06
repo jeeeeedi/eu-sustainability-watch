@@ -96,7 +96,7 @@ const RssLinkGenerator = ({ topics, languages, dateFrom, dateTo }: RssLinkGenera
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Bell className="h-3.5 w-3.5" />
-              <span>Updates delivered every Monday at 9:00 AM CET</span>
+              <span>Updates delivered every Monday at 9:00 AM EET</span>
             </div>
           </>
         ) : (

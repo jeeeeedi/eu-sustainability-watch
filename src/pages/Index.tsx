@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { triggerEURLexSearch } from "@/lib/eurlex-api";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -25,27 +26,63 @@ const Index = () => {
   const [isSearching, setIsSearching] = useState(false);
 
   const handleSearch = async () => {
+    if (!keywords.trim()) {
+      toast({
+        title: "Missing Keywords",
+        description: "Please enter at least one keyword to search.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSearching(true);
 
-    // Simulate search delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const formattedDateFrom = dateRange?.from
+        ? dateRange.from.toISOString().split('T')[0]
+        : new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      
+      const formattedDateTo = dateRange?.to
+        ? dateRange.to.toISOString().split('T')[0]
+        : new Date().toISOString().split('T')[0];
 
-    toast({
-      title: "Search Complete",
-      description: `Found regulations matching your criteria.`,
-    });
-
-    setIsSearching(false);
-
-    navigate("/dashboard", {
-      state: {
+      const searchParams = {
+        keywords: keywords.trim(),
         topics: selectedTopics,
+        dateFrom: formattedDateFrom,
+        dateTo: formattedDateTo,
         languages: selectedLanguages,
-        dateFrom: dateRange?.from?.toISOString(),
-        dateTo: dateRange?.to?.toISOString(),
-        keywords,
-      },
-    });
+        documentTypes: ['regulation', 'directive', 'decision'] as const,
+        excludeConsolidated: false,
+        excludeCorrigenda: false,
+      };
+
+      await triggerEURLexSearch(searchParams);
+
+      toast({
+        title: "Search Started",
+        description: "EUR-Lex search initiated. Results will be processed shortly.",
+      });
+
+      navigate("/dashboard", {
+        state: {
+          topics: selectedTopics,
+          languages: selectedLanguages,
+          dateFrom: formattedDateFrom,
+          dateTo: formattedDateTo,
+          keywords,
+        },
+      });
+    } catch (error) {
+      console.error("Search error:", error);
+      toast({
+        title: "Search Failed",
+        description: error instanceof Error ? error.message : "Failed to initiate search. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const features = [
@@ -102,7 +139,7 @@ const Index = () => {
               <div>
                 <h2 className="text-xl font-semibold">Search Regulations</h2>
                 <p className="text-sm text-muted-foreground">
-                  Define your search criteria using Eurovoc descriptors
+                  Define your search criteria with your chosen keywords plus EuroVoc descriptors
                 </p>
               </div>
             </div>

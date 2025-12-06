@@ -2,115 +2,113 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap");
 
 @layer base {
   :root {
-    --background: 43 35% 96%;
-    --foreground: 210 44% 19%;
+    --background: 0 0% 98%;
+    --foreground: 167 11% 27%;
 
-    --card: 43 35% 98%;
-    --card-foreground: 210 44% 19%;
+    --card: 0 0% 100%;
+    --card-foreground: 167 11% 27%;
 
-    --popover: 43 35% 98%;
-    --popover-foreground: 210 44% 19%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 167 11% 27%;
 
-    --primary: 210 44% 19%;
-    --primary-foreground: 43 35% 96%;
+    --primary: 167 11% 27%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 186 28% 38%;
-    --secondary-foreground: 43 35% 96%;
+    --secondary: 161 16% 37%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 43 25% 88%;
-    --muted-foreground: 215 38% 31%;
+    --muted: 160 6% 73%;
+    --muted-foreground: 168 14% 32%;
 
-    --accent: 24 60% 44%;
-    --accent-foreground: 43 35% 96%;
+    --accent: 88 25% 45%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 2 59% 38%;
-    --destructive-foreground: 43 35% 96%;
+    --destructive: 11 42% 38%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 43 20% 82%;
-    --input: 43 20% 82%;
-    --ring: 186 28% 38%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 161 16% 37%;
 
     --radius: 0.5rem;
 
     /* Custom tokens */
-    --color-navy: 215 38% 31%;
-    --color-navy-dark: 210 44% 19%;
-    --color-teal: 186 28% 38%;
-    --color-teal-light: 186 25% 48%;
-    --color-rust: 24 60% 44%;
-    --color-rust-light: 24 55% 54%;
-    --color-crimson: 2 59% 38%;
-    --color-cream: 43 35% 78%;
-    --surface-elevated: 43 35% 98%;
-    --surface-subtle: 43 30% 94%;
+    --color-navy: 168 14% 32%;
+    --color-navy-dark: 167 11% 27%;
+    --color-teal: 161 16% 37%;
+    --color-teal-light: 160 19% 45%;
+    --color-rust: 88 25% 45%;
+    --color-rust-light: 87 29% 55%;
+    --color-crimson: 11 42% 38%;
+    --color-cream: 145 28% 54%;
+    --surface-elevated: 0 0% 100%;
+    --surface-subtle: 0 0% 96%;
 
-    --sidebar-background: 43 35% 96%;
-    --sidebar-foreground: 210 44% 19%;
-    --sidebar-primary: 210 44% 19%;
-    --sidebar-primary-foreground: 43 35% 96%;
-    --sidebar-accent: 43 25% 90%;
-    --sidebar-accent-foreground: 210 44% 19%;
-    --sidebar-border: 43 20% 85%;
-    --sidebar-ring: 186 28% 38%;
-    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 167 11% 27%;
+    --sidebar-primary: 167 11% 27%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 160 19% 92%;
+    --sidebar-accent-foreground: 167 11% 27%;
+    --sidebar-border: 0 0% 85%;
+    --sidebar-ring: 161 16% 37%;
+    --font-sans: 'Lexend', ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
     --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
   }
 
   .dark {
-    --background: 210 44% 12%;
-    --foreground: 43 35% 90%;
+    --background: 167 11% 18%;
+    --foreground: 0 0% 92%;
 
-    --card: 210 40% 16%;
-    --card-foreground: 43 35% 90%;
+    --card: 167 11% 22%;
+    --card-foreground: 0 0% 92%;
 
-    --popover: 210 40% 16%;
-    --popover-foreground: 43 35% 90%;
+    --popover: 167 11% 22%;
+    --popover-foreground: 0 0% 92%;
 
-    --primary: 186 28% 48%;
-    --primary-foreground: 210 44% 12%;
+    --primary: 161 16% 45%;
+    --primary-foreground: 167 11% 18%;
 
-    --secondary: 215 38% 35%;
-    --secondary-foreground: 43 35% 90%;
+    --secondary: 168 14% 38%;
+    --secondary-foreground: 0 0% 92%;
 
-    --muted: 210 35% 22%;
-    --muted-foreground: 43 25% 65%;
+    --muted: 167 11% 28%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 24 55% 50%;
-    --accent-foreground: 210 44% 12%;
+    --accent: 88 25% 50%;
+    --accent-foreground: 167 11% 18%;
 
-    --destructive: 2 55% 45%;
-    --destructive-foreground: 43 35% 90%;
+    --destructive: 11 42% 45%;
+    --destructive-foreground: 0 0% 92%;
 
-    --border: 210 30% 25%;
-    --input: 210 30% 25%;
-    --ring: 186 28% 48%;
+    --border: 167 11% 26%;
+    --input: 167 11% 26%;
+    --ring: 161 16% 45%;
 
-    --color-navy: 215 38% 40%;
-    --color-navy-dark: 210 44% 25%;
-    --color-teal: 186 28% 48%;
-    --color-teal-light: 186 25% 58%;
-    --color-rust: 24 55% 50%;
-    --color-rust-light: 24 50% 60%;
-    --color-crimson: 2 55% 45%;
-    --color-cream: 43 30% 70%;
-    --surface-elevated: 210 40% 16%;
-    --surface-subtle: 210 38% 14%;
+    --color-navy: 168 14% 38%;
+    --color-navy-dark: 167 11% 32%;
+    --color-teal: 161 16% 45%;
+    --color-teal-light: 160 19% 55%;
+    --color-rust: 88 25% 50%;
+    --color-rust-light: 87 29% 60%;
+    --color-crimson: 11 42% 45%;
+    --color-cream: 145 28% 62%;
+    --surface-elevated: 167 11% 22%;
+    --surface-subtle: 167 11% 20%;
 
-    --sidebar-background: 210 44% 12%;
-    --sidebar-foreground: 43 35% 90%;
-    --sidebar-primary: 186 28% 48%;
-    --sidebar-primary-foreground: 210 44% 12%;
-    --sidebar-accent: 210 35% 20%;
-    --sidebar-accent-foreground: 43 35% 90%;
-    --sidebar-border: 210 30% 22%;
-    --sidebar-ring: 186 28% 48%;
-    --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+    --sidebar-background: 167 11% 18%;
+    --sidebar-foreground: 0 0% 92%;
+    --sidebar-primary: 161 16% 45%;
+    --sidebar-primary-foreground: 167 11% 18%;
+    --sidebar-accent: 167 11% 26%;
+    --sidebar-accent-foreground: 0 0% 92%;
+    --sidebar-border: 167 11% 24%;
+    --sidebar-ring: 161 16% 45%;
+    --font-sans: 'Lexend', ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
     --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
   }
 }
@@ -122,11 +120,11 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Poppins', system-ui, sans-serif;
+    font-family: 'Lexend', system-ui, sans-serif;
   }
 
   h1, h2, h3 {
-    font-family: 'Poppins', system-ui, sans-serif;
+    font-family: 'Lexend', system-ui, sans-serif;
     @apply font-semibold tracking-tight;
   }
 }
