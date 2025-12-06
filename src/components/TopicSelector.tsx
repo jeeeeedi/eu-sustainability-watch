@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Check, ChevronDown, Search } from "lucide-react";
-import { eurovocTopics } from "@/lib/eurovoc-topics";
+import { Check, ChevronDown, ChevronRight, Search } from "lucide-react";
+import { eurovocTopics, EurovocTopic, EurovocSubdomain } from "@/lib/eurovoc-topics";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +11,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 interface TopicSelectorProps {
   selectedTopics: string[];
@@ -20,6 +25,7 @@ interface TopicSelectorProps {
 const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [expandedDomains, setExpandedDomains] = useState<string[]>([]);
 
   const toggleTopic = (topicId: string) => {
     onTopicsChange(
@@ -29,22 +35,50 @@ const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) =
     );
   };
 
-  const filteredTopics = eurovocTopics.filter((topic) =>
-    topic.label.toLowerCase().includes(searchQuery.toLowerCase())
+  const toggleDomain = (domainId: string) => {
+    setExpandedDomains((prev) =>
+      prev.includes(domainId)
+        ? prev.filter((id) => id !== domainId)
+        : [...prev, domainId]
+    );
+  };
+
+  const matchesSearch = (label: string) =>
+    label.toLowerCase().includes(searchQuery.toLowerCase());
+
+  const filteredTopics = eurovocTopics.filter(
+    (domain) =>
+      matchesSearch(domain.label) ||
+      domain.subdomains.some((sub) => matchesSearch(sub.label))
   );
 
-  const getSelectedLabels = () => {
-    return eurovocTopics
-      .filter((topic) => selectedTopics.includes(topic.id))
-      .map((topic) => topic.label);
+  const getSelectedLabels = (): string[] => {
+    const labels: string[] = [];
+    eurovocTopics.forEach((domain) => {
+      if (selectedTopics.includes(domain.id)) {
+        labels.push(domain.label);
+      }
+      domain.subdomains.forEach((sub) => {
+        if (selectedTopics.includes(sub.id)) {
+          labels.push(sub.label);
+        }
+      });
+    });
+    return labels;
   };
 
   const selectedLabels = getSelectedLabels();
 
+  const isSubdomainSelected = (subdomain: EurovocSubdomain) =>
+    selectedTopics.includes(subdomain.id);
+
+  const isDomainPartiallySelected = (domain: EurovocTopic) =>
+    domain.subdomains.some((sub) => selectedTopics.includes(sub.id));
+
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium text-foreground">
-        Topics (EuroVoc Domains)
+        Topics (EuroVoc Domains & Subdomains)
       </label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -72,41 +106,101 @@ const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) =
             <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[400px] p-0" align="start">
+        <PopoverContent className="w-[450px] p-0" align="start">
           <div className="p-3 border-b">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search topics..."
+                placeholder="Search domains and subdomains..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
               />
             </div>
           </div>
-          <ScrollArea className="h-[300px]">
+          <ScrollArea className="h-[350px]">
             <div className="p-2">
-              {filteredTopics.map((topic) => (
-                <div
-                  key={topic.id}
-                  className="flex items-center gap-2 p-2 rounded-md hover:bg-muted cursor-pointer"
-                  onClick={() => toggleTopic(topic.id)}
-                >
-                  <div
-                    className={cn(
-                      "flex h-4 w-4 items-center justify-center rounded border",
-                      selectedTopics.includes(topic.id)
-                        ? "bg-primary border-primary"
-                        : "border-input"
-                    )}
+              {filteredTopics.map((domain) => {
+                const isExpanded = expandedDomains.includes(domain.id) || searchQuery.length > 0;
+                const filteredSubdomains = domain.subdomains.filter((sub) =>
+                  matchesSearch(sub.label) || matchesSearch(domain.label)
+                );
+
+                return (
+                  <Collapsible
+                    key={domain.id}
+                    open={isExpanded}
+                    onOpenChange={() => toggleDomain(domain.id)}
                   >
-                    {selectedTopics.includes(topic.id) && (
-                      <Check className="h-3 w-3 text-primary-foreground" />
-                    )}
-                  </div>
-                  <span className="text-sm">{topic.label}</span>
-                </div>
-              ))}
+                    <div className="flex items-center gap-1">
+                      <CollapsibleTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                        >
+                          {isExpanded ? (
+                            <ChevronDown className="h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </CollapsibleTrigger>
+                      <div
+                        className={cn(
+                          "flex items-center gap-2 p-2 rounded-md hover:bg-muted cursor-pointer flex-1",
+                          isDomainPartiallySelected(domain) && "bg-muted/50"
+                        )}
+                        onClick={() => toggleTopic(domain.id)}
+                      >
+                        <div
+                          className={cn(
+                            "flex h-4 w-4 items-center justify-center rounded border",
+                            selectedTopics.includes(domain.id)
+                              ? "bg-primary border-primary"
+                              : "border-input"
+                          )}
+                        >
+                          {selectedTopics.includes(domain.id) && (
+                            <Check className="h-3 w-3 text-primary-foreground" />
+                          )}
+                        </div>
+                        <span className="text-sm font-medium">{domain.label}</span>
+                        <Badge variant="outline" className="ml-auto text-xs">
+                          {domain.subdomains.length}
+                        </Badge>
+                      </div>
+                    </div>
+                    <CollapsibleContent>
+                      <div className="ml-9 border-l border-border pl-2 space-y-1 pb-2">
+                        {filteredSubdomains.map((subdomain) => (
+                          <div
+                            key={subdomain.id}
+                            className="flex items-center gap-2 p-2 rounded-md hover:bg-muted cursor-pointer"
+                            onClick={() => toggleTopic(subdomain.id)}
+                          >
+                            <div
+                              className={cn(
+                                "flex h-4 w-4 items-center justify-center rounded border",
+                                isSubdomainSelected(subdomain)
+                                  ? "bg-primary border-primary"
+                                  : "border-input"
+                              )}
+                            >
+                              {isSubdomainSelected(subdomain) && (
+                                <Check className="h-3 w-3 text-primary-foreground" />
+                              )}
+                            </div>
+                            <span className="text-sm text-muted-foreground">
+                              {subdomain.label}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                );
+              })}
             </div>
           </ScrollArea>
           {selectedTopics.length > 0 && (
@@ -117,7 +211,7 @@ const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) =
                 className="w-full"
                 onClick={() => onTopicsChange([])}
               >
-                Clear all
+                Clear all ({selectedTopics.length})
               </Button>
             </div>
           )}
