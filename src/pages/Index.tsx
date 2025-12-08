@@ -3,7 +3,7 @@ import { Search, Sparkles, Shield, Bell, FileSearch } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DateRange } from "react-day-picker";
 import Header from "@/components/Header";
-import TopicSelector from "@/components/TopicSelector";
+import ThemeSelector from "@/components/ThemeSelector";
 import LanguageSelector from "@/components/LanguageSelector";
 import DateRangePicker from "@/components/DateRangePicker";
 import RssLinkGenerator from "@/components/RssLinkGenerator";
@@ -16,7 +16,7 @@ import { triggerEURLexSearch } from "@/lib/eurlex-api";
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>(["EN"]);
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
@@ -48,7 +48,7 @@ const Index = () => {
 
       const searchParams = {
         keywords: keywords.trim(),
-        topics: selectedTopics,
+        themes: selectedThemes,
         dateFrom: formattedDateFrom,
         dateTo: formattedDateTo,
         languages: selectedLanguages,
@@ -66,7 +66,7 @@ const Index = () => {
 
       navigate("/dashboard", {
         state: {
-          topics: selectedTopics,
+          themes: selectedThemes,
           languages: selectedLanguages,
           dateFrom: formattedDateFrom,
           dateTo: formattedDateTo,
@@ -160,7 +160,7 @@ const Index = () => {
               </div>
 
               <div className="md:col-span-2">
-                <TopicSelector selectedTopics={selectedTopics} onTopicsChange={setSelectedTopics} />
+                <ThemeSelector selectedThemes={selectedThemes} onThemesChange={setSelectedThemes} />
               </div>
 
               <DateRangePicker dateRange={dateRange} onDateRangeChange={setDateRange} />
@@ -195,7 +195,7 @@ const Index = () => {
         {/* RSS Generator */}
         <div className="max-w-5xl mx-auto mt-6">
           <RssLinkGenerator
-            topics={selectedTopics}
+            themes={selectedThemes}
             languages={selectedLanguages}
             dateFrom={dateRange?.from}
             dateTo={dateRange?.to}

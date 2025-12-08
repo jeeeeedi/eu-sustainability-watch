@@ -6,14 +6,14 @@ export interface EurovocSubdomain {
   label: string;
 }
 
-export interface EurovocTopic {
+export interface EurovocTheme {
   id: string;
   label: string;
   descriptor: string;
   subdomains: EurovocSubdomain[];
 }
 
-export const eurovocTopics: EurovocTopic[] = [
+export const eurovocThemes: EurovocTheme[] = [
   {
     id: "04",
     label: "Politics",
@@ -316,11 +316,11 @@ export const euLanguages = [
 
 export type EuLanguage = (typeof euLanguages)[number];
 
-// Helper to get all topic IDs (domains + subdomains) for flat selection
-export const getAllTopicOptions = () => {
+// Helper to get all theme IDs (domains + subdomains) for flat selection
+export const getAllThemeOptions = () => {
   const options: { id: string; label: string; parentId?: string; parentLabel?: string }[] = [];
   
-  eurovocTopics.forEach((domain) => {
+  eurovocThemes.forEach((domain) => {
     options.push({ id: domain.id, label: domain.label });
     domain.subdomains.forEach((sub) => {
       options.push({ 

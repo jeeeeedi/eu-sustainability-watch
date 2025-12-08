@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Check, ChevronDown, ChevronRight, Search } from "lucide-react";
-import { eurovocTopics, EurovocTopic, EurovocSubdomain } from "@/lib/eurovoc-topics";
+import { eurovocThemes, EurovocTheme, EurovocSubdomain } from "@/lib/eurovoc-themes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,21 +17,21 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
-interface TopicSelectorProps {
-  selectedTopics: string[];
-  onTopicsChange: (topics: string[]) => void;
+interface ThemeSelectorProps {
+  selectedThemes: string[];
+  onThemesChange: (themes: string[]) => void;
 }
 
-const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) => {
+const ThemeSelector = ({ selectedThemes, onThemesChange }: ThemeSelectorProps) => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedDomains, setExpandedDomains] = useState<string[]>([]);
 
-  const toggleTopic = (topicId: string) => {
-    onTopicsChange(
-      selectedTopics.includes(topicId)
-        ? selectedTopics.filter((id) => id !== topicId)
-        : [...selectedTopics, topicId]
+  const toggleTheme = (themeId: string) => {
+    onThemesChange(
+      selectedThemes.includes(themeId)
+        ? selectedThemes.filter((id) => id !== themeId)
+        : [...selectedThemes, themeId]
     );
   };
 
@@ -46,7 +46,7 @@ const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) =
   const matchesSearch = (label: string) =>
     label.toLowerCase().includes(searchQuery.toLowerCase());
 
-  const filteredTopics = eurovocTopics.filter(
+  const filteredThemes = eurovocThemes.filter(
     (domain) =>
       matchesSearch(domain.label) ||
       domain.subdomains.some((sub) => matchesSearch(sub.label))
@@ -54,12 +54,12 @@ const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) =
 
   const getSelectedLabels = (): string[] => {
     const labels: string[] = [];
-    eurovocTopics.forEach((domain) => {
-      if (selectedTopics.includes(domain.id)) {
+    eurovocThemes.forEach((domain) => {
+      if (selectedThemes.includes(domain.id)) {
         labels.push(domain.label);
       }
       domain.subdomains.forEach((sub) => {
-        if (selectedTopics.includes(sub.id)) {
+        if (selectedThemes.includes(sub.id)) {
           labels.push(sub.label);
         }
       });
@@ -70,15 +70,15 @@ const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) =
   const selectedLabels = getSelectedLabels();
 
   const isSubdomainSelected = (subdomain: EurovocSubdomain) =>
-    selectedTopics.includes(subdomain.id);
+    selectedThemes.includes(subdomain.id);
 
-  const isDomainPartiallySelected = (domain: EurovocTopic) =>
-    domain.subdomains.some((sub) => selectedTopics.includes(sub.id));
+  const isDomainPartiallySelected = (domain: EurovocTheme) =>
+    domain.subdomains.some((sub) => selectedThemes.includes(sub.id));
 
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium text-foreground">
-        Topics (EuroVoc Domains & Subdomains)
+        Themes (EuroVoc Domains & Subdomains)
       </label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -90,16 +90,16 @@ const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) =
           >
             <div className="flex flex-wrap gap-1 flex-1 text-left">
               {selectedLabels.length === 0 ? (
-                <span className="text-muted-foreground">Select topics...</span>
+                <span className="text-muted-foreground">Select themes...</span>
               ) : selectedLabels.length <= 3 ? (
                 selectedLabels.map((label) => (
-                  <Badge key={label} variant="secondary" className="tag-topic">
+                  <Badge key={label} variant="secondary" className="tag-theme">
                     {label}
                   </Badge>
                 ))
               ) : (
                 <span className="text-sm">
-                  {selectedLabels.length} topics selected
+                  {selectedLabels.length} themes selected
                 </span>
               )}
             </div>
@@ -120,7 +120,7 @@ const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) =
           </div>
           <ScrollArea className="h-[350px]">
             <div className="p-2">
-              {filteredTopics.map((domain) => {
+              {filteredThemes.map((domain) => {
                 const isExpanded = expandedDomains.includes(domain.id) || searchQuery.length > 0;
                 const filteredSubdomains = domain.subdomains.filter((sub) =>
                   matchesSearch(sub.label) || matchesSearch(domain.label)
@@ -151,17 +151,17 @@ const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) =
                           "flex items-center gap-2 p-2 rounded-md hover:bg-muted cursor-pointer flex-1",
                           isDomainPartiallySelected(domain) && "bg-muted/50"
                         )}
-                        onClick={() => toggleTopic(domain.id)}
+                        onClick={() => toggleTheme(domain.id)}
                       >
                         <div
                           className={cn(
                             "flex h-4 w-4 items-center justify-center rounded border",
-                            selectedTopics.includes(domain.id)
+                            selectedThemes.includes(domain.id)
                               ? "bg-primary border-primary"
                               : "border-input"
                           )}
                         >
-                          {selectedTopics.includes(domain.id) && (
+                          {selectedThemes.includes(domain.id) && (
                             <Check className="h-3 w-3 text-primary-foreground" />
                           )}
                         </div>
@@ -177,7 +177,7 @@ const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) =
                           <div
                             key={subdomain.id}
                             className="flex items-center gap-2 p-2 rounded-md hover:bg-muted cursor-pointer"
-                            onClick={() => toggleTopic(subdomain.id)}
+                            onClick={() => toggleTheme(subdomain.id)}
                           >
                             <div
                               className={cn(
@@ -203,15 +203,15 @@ const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) =
               })}
             </div>
           </ScrollArea>
-          {selectedTopics.length > 0 && (
+          {selectedThemes.length > 0 && (
             <div className="p-3 border-t">
               <Button
                 variant="ghost"
                 size="sm"
                 className="w-full"
-                onClick={() => onTopicsChange([])}
+                onClick={() => onThemesChange([])}
               >
-                Clear all ({selectedTopics.length})
+                Clear all ({selectedThemes.length})
               </Button>
             </div>
           )}
@@ -221,4 +221,4 @@ const TopicSelector = ({ selectedTopics, onTopicsChange }: TopicSelectorProps) =
   );
 };
 
-export default TopicSelector;
+export default ThemeSelector;

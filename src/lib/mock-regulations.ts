@@ -100,7 +100,7 @@ export const mockRegulations: Regulation[] = [
 ];
 
 export const getFilteredRegulations = (
-  topics: string[],
+  themes: string[],
   languages: string[],
   dateFrom?: Date,
   dateTo?: Date
@@ -121,8 +121,8 @@ export const getFilteredRegulations = (
     );
   }
   
-  // Topics would be matched against tags/categories in production
-  if (topics.length > 0) {
+  // Themes would be matched against tags/categories in production
+  if (themes.length > 0) {
     // Just return all for demo purposes
   }
   

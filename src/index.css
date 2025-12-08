@@ -149,7 +149,7 @@
     color: hsl(var(--color-teal));
   }
 
-  .tag-topic {
+  .tag-themes {
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
     background: hsl(var(--color-navy) / 0.12);
     color: hsl(var(--color-navy));

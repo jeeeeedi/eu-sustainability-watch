@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Check, ChevronDown, Search, X } from "lucide-react";
-import { euLanguages } from "@/lib/eurovoc-topics";
+import { euLanguages } from "@/lib/eurovoc-themes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {

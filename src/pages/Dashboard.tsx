@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getFilteredRegulations } from "@/lib/mock-regulations";
-import { eurovocTopics, euLanguages } from "@/lib/eurovoc-topics";
+import { eurovocThemes, euLanguages } from "@/lib/eurovoc-themes";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -16,7 +16,7 @@ const Dashboard = () => {
   
   const [regulations, setRegulations] = useState<Regulation[]>(() => 
     getFilteredRegulations(
-      searchParams.topics || [],
+      searchParams.themes || [],
       searchParams.languages || ["EN"],
       searchParams.dateFrom,
       searchParams.dateTo
@@ -25,7 +25,7 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  const selectedTopics: string[] = searchParams.topics || [];
+  const selectedThemes: string[] = searchParams.themes || [];
   const selectedLanguages: string[] = searchParams.languages || ["EN"];
   const keywords: string = searchParams.keywords || "";
   const dateRange = {
@@ -37,7 +37,7 @@ const Dashboard = () => {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const filtered = getFilteredRegulations(
-      selectedTopics,
+      selectedThemes,
       selectedLanguages,
       dateRange.from,
       dateRange.to
@@ -46,14 +46,14 @@ const Dashboard = () => {
     setIsLoading(false);
   };
 
-  const getTopicLabels = () => {
+  const getThemeLabels = () => {
     const labels: string[] = [];
-    eurovocTopics.forEach((domain) => {
-      if (selectedTopics.includes(domain.id)) {
+    eurovocThemes.forEach((domain) => {
+      if (selectedThemes.includes(domain.id)) {
         labels.push(domain.label);
       }
       domain.subdomains.forEach((sub) => {
-        if (selectedTopics.includes(sub.id)) {
+        if (selectedThemes.includes(sub.id)) {
           labels.push(sub.label);
         }
       });
@@ -69,7 +69,7 @@ const Dashboard = () => {
 
   const stats = [
     { label: "Total Regulations", value: regulations.length, icon: FileText },
-    { label: "Topics Tracked", value: selectedTopics.length || "All", icon: Filter },
+    { label: "Themes Tracked", value: selectedThemes.length || "All", icon: Filter },
     { label: "Languages", value: selectedLanguages.length, icon: LayoutGrid },
   ];
 
@@ -120,7 +120,7 @@ const Dashboard = () => {
           </div>
 
           {/* Active Filters */}
-          {(selectedTopics.length > 0 || selectedLanguages.length > 0 || keywords) && (
+          {(selectedThemes.length > 0 || selectedLanguages.length > 0 || keywords) && (
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-sm text-muted-foreground">Active filters:</span>
               {keywords && (
@@ -128,8 +128,8 @@ const Dashboard = () => {
                   "{keywords}"
                 </Badge>
               )}
-              {getTopicLabels().map((label) => (
-                <Badge key={label} variant="secondary" className="tag-topic">
+              {getThemeLabels().map((label) => (
+                <Badge key={label} variant="secondary" className="tag-theme">
                   {label}
                 </Badge>
               ))}

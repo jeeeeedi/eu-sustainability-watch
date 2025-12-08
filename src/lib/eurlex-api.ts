@@ -1,6 +1,6 @@
 export interface EURLexSearchParams {
   keywords: string;
-  topics: string[];
+  themes: string[];
   dateFrom: string; // YYYY-MM-DD
   dateTo: string;   // YYYY-MM-DD
   languages: string[];

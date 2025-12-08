@@ -80,7 +80,7 @@ const RegulationCard = ({
         
         <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-border">
           <Tag className="h-3.5 w-3.5 text-muted-foreground" />
-          {regulation.tags.map(tag => <Badge key={tag} variant="outline" className="tag-topic text-xs">
+          {regulation.tags.map(tag => <Badge key={tag} variant="outline" className="tag-theme text-xs">
               {tag}
             </Badge>)}
         </div>

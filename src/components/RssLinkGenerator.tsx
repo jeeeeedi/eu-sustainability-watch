@@ -6,13 +6,13 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 interface RssLinkGeneratorProps {
-  topics: string[];
+  themes: string[];
   languages: string[];
   dateFrom?: Date;
   dateTo?: Date;
 }
 
-const RssLinkGenerator = ({ topics, languages, dateFrom, dateTo }: RssLinkGeneratorProps) => {
+const RssLinkGenerator = ({ themes, languages, dateFrom, dateTo }: RssLinkGeneratorProps) => {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
@@ -20,8 +20,8 @@ const RssLinkGenerator = ({ topics, languages, dateFrom, dateTo }: RssLinkGenera
     const baseUrl = window.location.origin + "/api/rss";
     const params = new URLSearchParams();
     
-    if (topics.length > 0) {
-      params.set("topics", topics.join(","));
+    if (themes.length > 0) {
+      params.set("themes", themes.join(","));
     }
     if (languages.length > 0) {
       params.set("languages", languages.join(","));
@@ -56,7 +56,7 @@ const RssLinkGenerator = ({ topics, languages, dateFrom, dateTo }: RssLinkGenera
     }
   };
 
-  const hasFilters = topics.length > 0 || languages.length > 0;
+  const hasFilters = themes.length > 0 || languages.length > 0;
 
   return (
     <Card className="card-elevated border-eu-teal/20">
@@ -101,7 +101,7 @@ const RssLinkGenerator = ({ topics, languages, dateFrom, dateTo }: RssLinkGenera
           </>
         ) : (
           <p className="text-sm text-muted-foreground italic">
-            Select topics and languages to generate your personalized RSS feed link.
+            Select themes and languages to generate your personalized RSS feed link.
           </p>
         )}
       </CardContent>
