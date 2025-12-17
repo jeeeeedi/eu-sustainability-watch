@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, LayoutDashboard, Rss } from "lucide-react";
+import { Search, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 const Header = () => {
   const location = useLocation();

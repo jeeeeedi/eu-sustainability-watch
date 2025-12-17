@@ -8,18 +8,12 @@ interface N8nRegulation {
   celex_number: string;
   document_type: string;
   publication_date: string;
-  eurovoc_descriptors: string[];
+  keywords: string[];
   summary: string;
   official_url: string;
   languages: string[];
-  urgency: string | null;
-  compliance_requirements: string[];
-  affected_sectors: string[];
-  implementation_timeline: string | null;
-  executive_summary: string | null;
   created_at: string;
   search_id: string | null;
-  // New fields from n8n processing
   category: string | null;
   highlights: string[] | null;
   tags: string[] | null;
@@ -40,12 +34,11 @@ function mapN8nToRegulation(item: N8nRegulation, index: number): Regulation {
   // Use pre-computed fields from Supabase if available, otherwise derive
   const category = item.category || deriveCategory(item.title, item.document_type);
   
-  // Use tags from Supabase, or derive from eurovoc/sectors
+  // Use tags from Supabase, or derive from keywords
   const tags = item.tags && item.tags.length > 0
     ? item.tags
     : [
-        ...(item.eurovoc_descriptors || []),
-        ...(item.affected_sectors || []),
+        ...(item.keywords || []),
       ].filter(Boolean);
 
   // Use highlights from Supabase, or extract from summary
@@ -109,7 +102,6 @@ function extractHighlights(summary: string): string[] {
 
 export interface FetchRegulationsParams {
   searchId?: string; // Filter by specific search session
-  themes?: string[];
   languages?: string[];
   dateFrom?: Date;
   dateTo?: Date;
@@ -125,7 +117,6 @@ export async function fetchRegulationsFromN8n(
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     console.log("Supabase not configured, using mock data");
     return getFilteredRegulations(
-      params?.themes || [],
       params?.languages || ["EN"],
       params?.dateFrom,
       params?.dateTo
@@ -181,7 +172,6 @@ export async function fetchRegulationsFromN8n(
     if (data.length === 0) {
       console.log("No data from Supabase, falling back to mock data");
       return getFilteredRegulations(
-        params?.themes || [],
         params?.languages || ["EN"],
         params?.dateFrom,
         params?.dateTo
@@ -194,7 +184,6 @@ export async function fetchRegulationsFromN8n(
     console.error("Failed to fetch regulations from Supabase:", error);
     console.log("Falling back to mock data");
     return getFilteredRegulations(
-      params?.themes || [],
       params?.languages || ["EN"],
       params?.dateFrom,
       params?.dateTo
@@ -222,7 +211,6 @@ export async function triggerN8nSearch(params: FetchRegulationsParams): Promise<
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      themes: params.themes || [],
       languages: params.languages || ["EN"],
       dateFrom: params.dateFrom?.toISOString().split("T")[0],
       dateTo: params.dateTo?.toISOString().split("T")[0],
@@ -289,7 +277,6 @@ export async function fetchFromN8nWebhook(
     console.error("Failed to fetch from n8n webhook:", error);
     console.log("Falling back to mock data");
     return getFilteredRegulations(
-      params?.themes || [],
       params?.languages || ["EN"],
       params?.dateFrom,
       params?.dateTo

@@ -100,7 +100,6 @@ export const mockRegulations: Regulation[] = [
 ];
 
 export const getFilteredRegulations = (
-  themes: string[],
   languages: string[],
   dateFrom?: Date,
   dateTo?: Date
@@ -119,11 +118,6 @@ export const getFilteredRegulations = (
     filtered = filtered.filter(
       (r) => new Date(r.publicationDate) <= dateTo
     );
-  }
-  
-  // Themes would be matched against tags/categories in production
-  if (themes.length > 0) {
-    // Just return all for demo purposes
   }
   
   return filtered;

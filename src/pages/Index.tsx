@@ -3,10 +3,8 @@ import { Search, Sparkles, Shield, Bell, FileSearch } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { DateRange } from "react-day-picker";
 import Header from "@/components/Header";
-import ThemeSelector from "@/components/ThemeSelector";
 import LanguageSelector from "@/components/LanguageSelector";
 import DateRangePicker from "@/components/DateRangePicker";
-import RssLinkGenerator from "@/components/RssLinkGenerator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,13 +14,12 @@ import { triggerEURLexSearch, generateSearchId } from "@/lib/eurlex-api";
 const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>(["EN"]);
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
     to: new Date(),
   });
-  const [keywords, setKeywords] = useState("sustainability");
+  const [keywords, setKeywords] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
   const handleSearch = async () => {
@@ -51,8 +48,7 @@ const Index = () => {
 
       const searchParams = {
         searchId,
-        keywords: keywords.trim(),
-        themes: selectedThemes,
+        keywords: `sustainability, ${keywords.trim()}`,
         dateFrom: formattedDateFrom,
         dateTo: formattedDateTo,
         languages: selectedLanguages,
@@ -71,7 +67,6 @@ const Index = () => {
       navigate("/dashboard", {
         state: {
           searchId,
-          themes: selectedThemes,
           languages: selectedLanguages,
           dateFrom: formattedDateFrom,
           dateTo: formattedDateTo,
@@ -100,11 +95,6 @@ const Index = () => {
       icon: Sparkles,
       title: "AI-Powered Summaries",
       description: "Intelligent extraction of key highlights and implications",
-    },
-    {
-      icon: Bell,
-      title: "RSS Updates",
-      description: "Weekly digest of new regulations matching your criteria",
     },
     {
       icon: Shield,
@@ -138,34 +128,18 @@ const Index = () => {
         <Card className="card-elevated max-w-5xl mx-auto">
           <CardContent className="p-6 md:p-8 space-y-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                <Search className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold">Search Regulations</h2>
-                <p className="text-sm text-muted-foreground">
-                  Define your search criteria with your chosen keywords plus EuroVoc descriptors
-                </p>
-              </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
               {/* Keywords Input */}
               <div className="md:col-span-2 space-y-2">
-                <label className="text-sm font-medium text-foreground">Keywords</label>
+                <label className="text-sm font-medium text-foreground">Enter a search keyword</label>
                 <Input
-                  placeholder="Enter keywords (e.g., sustainability, carbon, ESG)..."
+                  placeholder="Enter a keyword (e.g., greenhouse gas, carbon, ESG)..."
                   value={keywords}
                   onChange={(e) => setKeywords(e.target.value)}
                   className="w-full"
                 />
-                <p className="text-xs text-muted-foreground">
-                  Separate multiple keywords with commas
-                </p>
-              </div>
-
-              <div className="md:col-span-2">
-                <ThemeSelector selectedThemes={selectedThemes} onThemesChange={setSelectedThemes} />
               </div>
 
               <DateRangePicker dateRange={dateRange} onDateRangeChange={setDateRange} />
@@ -189,7 +163,7 @@ const Index = () => {
                 ) : (
                   <>
                     <Search className="h-4 w-4" />
-                    Search Regulations
+                    Search
                   </>
                 )}
               </Button>
@@ -197,20 +171,11 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        {/* RSS Generator */}
-        <div className="max-w-5xl mx-auto mt-6">
-          <RssLinkGenerator
-            themes={selectedThemes}
-            languages={selectedLanguages}
-            dateFrom={dateRange?.from}
-            dateTo={dateRange?.to}
-          />
-        </div>
       </section>
 
       {/* Features Section */}
       <section className="container pb-20">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {features.map((feature, index) => (
             <Card
               key={feature.title}

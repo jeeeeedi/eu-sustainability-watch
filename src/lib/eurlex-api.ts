@@ -1,7 +1,6 @@
 export interface EURLexSearchParams {
   searchId: string; // Unique ID to track this search session
   keywords: string;
-  themes: string[];
   dateFrom: string; // YYYY-MM-DD
   dateTo: string;   // YYYY-MM-DD
   languages: string[];
@@ -13,7 +12,7 @@ export interface EURLexSearchParams {
 // Generate a unique search ID (short format to match n8n workflow)
 export function generateSearchId(): string {
   // return Math.random().toString(36).substring(2, 10);
-  return '9d2urxb5'; // TODO: Hardcoded for testing, uncomment above for prod
+  return 'qkn6epbk'; // TODO: Hardcoded for testing, uncomment above for prod
 }
 
 export async function triggerEURLexSearch(params: EURLexSearchParams) {

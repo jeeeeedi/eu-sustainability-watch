@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Download, RefreshCw, LayoutGrid, List, FileText, Filter } from "lucide-react";
+import { Download, RefreshCw, LayoutGrid, List, FileText } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 import RegulationCard, { Regulation } from "@/components/RegulationCard";
@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchRegulationsFromN8n } from "@/lib/n8n-api";
-import { eurovocThemes, euLanguages } from "@/lib/eurovoc-themes";
+import { euLanguages } from "@/lib/eurovoc-themes";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -20,9 +20,8 @@ const Dashboard = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const searchId: string | undefined = searchParams.searchId;
-  const selectedThemes: string[] = searchParams.themes || [];
   const selectedLanguages: string[] = searchParams.languages || ["EN"];
-  const keywords: string = searchParams.keywords || "";
+  const keywords: string = searchParams.keywords || "sustainability, baltic tourism"; // TODO: hardcoded for testing only
   const dateRange = {
     from: searchParams.dateFrom ? new Date(searchParams.dateFrom) : undefined,
     to: searchParams.dateTo ? new Date(searchParams.dateTo) : undefined,
@@ -35,7 +34,6 @@ const Dashboard = () => {
     try {
       const data = await fetchRegulationsFromN8n({
         searchId, // Filter by this search session
-        themes: selectedThemes,
         languages: selectedLanguages,
         dateFrom: dateRange.from,
         dateTo: dateRange.to,
@@ -61,21 +59,6 @@ const Dashboard = () => {
     await fetchRegulations();
   };
 
-  const getThemeLabels = () => {
-    const labels: string[] = [];
-    eurovocThemes.forEach((domain) => {
-      if (selectedThemes.includes(domain.id)) {
-        labels.push(domain.label);
-      }
-      domain.subdomains.forEach((sub) => {
-        if (selectedThemes.includes(sub.id)) {
-          labels.push(sub.label);
-        }
-      });
-    });
-    return labels;
-  };
-
   const getLanguageLabels = () => {
     return euLanguages
       .filter((lang) => selectedLanguages.includes(lang.code))
@@ -84,7 +67,6 @@ const Dashboard = () => {
 
   const stats = [
     { label: "Total Regulations", value: regulations.length, icon: FileText },
-    { label: "Themes Tracked", value: selectedThemes.length || "All", icon: Filter },
     { label: "Languages", value: selectedLanguages.length, icon: LayoutGrid },
   ];
 
@@ -133,33 +115,6 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-
-          {/* Active Filters */}
-          {(selectedThemes.length > 0 || selectedLanguages.length > 0 || keywords) && (
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-muted-foreground">Active filters:</span>
-              {keywords && (
-                <Badge variant="default" className="bg-primary/10 text-primary">
-                  "{keywords}"
-                </Badge>
-              )}
-              {getThemeLabels().map((label) => (
-                <Badge key={label} variant="secondary" className="tag-theme">
-                  {label}
-                </Badge>
-              ))}
-              {getLanguageLabels().map((label) => (
-                <Badge key={label} variant="outline">
-                  {label}
-                </Badge>
-              ))}
-              {dateRange.from && dateRange.to && (
-                <Badge variant="outline">
-                  {dateRange.from.toLocaleDateString()} - {dateRange.to.toLocaleDateString()}
-                </Badge>
-              )}
-            </div>
-          )}
 
           {/* Stats Cards */}
           <div className="grid grid-cols-3 gap-4">
@@ -225,6 +180,36 @@ const Dashboard = () => {
                   <CardTitle className="text-base">Quick Stats</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {keywords && (
+                    <div className="space-y-2">
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                        Keywords
+                      </p>
+                      <p className="text-sm text-foreground">{keywords}</p>
+                    </div>
+                  )}
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      Languages
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {getLanguageLabels().map((lang) => (
+                        <Badge key={lang} variant="secondary">
+                          {lang}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  {(dateRange.from || dateRange.to) && (
+                    <div className="space-y-2">
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                        Date Range
+                      </p>
+                      <p className="text-sm text-foreground">
+                        {dateRange.from?.toLocaleDateString()} - {dateRange.to?.toLocaleDateString()}
+                      </p>
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                       Categories Found
