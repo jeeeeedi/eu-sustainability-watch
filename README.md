@@ -71,3 +71,15 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+
+## NOTES:
+
+To manually send `skyvern-result.json` to n8n node `4. Receive Skyvern Results`:
+
+```curl
+curl -X POST \
+  https://jeeeeedi.app.n8n.cloud/webhook/skyvern-results \
+  -H "Content-Type: application/json" \
+  -d @skyvern-result.json
+```
