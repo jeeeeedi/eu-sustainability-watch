@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Download, RefreshCw, LayoutGrid, List, FileText, Filter } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import Header from "@/components/Header";
@@ -7,22 +7,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getFilteredRegulations } from "@/lib/mock-regulations";
+import { fetchFromN8nWebhook } from "@/lib/n8n-api";
 import { eurovocThemes, euLanguages } from "@/lib/eurovoc-themes";
 
 const Dashboard = () => {
   const location = useLocation();
   const searchParams = location.state || {};
   
-  const [regulations, setRegulations] = useState<Regulation[]>(() => 
-    getFilteredRegulations(
-      searchParams.themes || [],
-      searchParams.languages || ["EN"],
-      searchParams.dateFrom,
-      searchParams.dateTo
-    )
-  );
-  const [isLoading, setIsLoading] = useState(false);
+  const [regulations, setRegulations] = useState<Regulation[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const selectedThemes: string[] = searchParams.themes || [];
@@ -33,17 +27,34 @@ const Dashboard = () => {
     to: searchParams.dateTo ? new Date(searchParams.dateTo) : undefined,
   };
 
-  const handleRefresh = async () => {
+  // Fetch regulations from n8n webhook
+  const fetchRegulations = async () => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const filtered = getFilteredRegulations(
-      selectedThemes,
-      selectedLanguages,
-      dateRange.from,
-      dateRange.to
-    );
-    setRegulations(filtered);
-    setIsLoading(false);
+    setError(null);
+    try {
+      const data = await fetchFromN8nWebhook({
+        themes: selectedThemes,
+        languages: selectedLanguages,
+        dateFrom: dateRange.from,
+        dateTo: dateRange.to,
+        keywords,
+      });
+      setRegulations(data);
+    } catch (err) {
+      console.error("Failed to fetch regulations:", err);
+      setError("Failed to load regulations. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch on mount and when search params change
+  useEffect(() => {
+    fetchRegulations();
+  }, []);
+
+  const handleRefresh = async () => {
+    await fetchRegulations();
   };
 
   const getThemeLabels = () => {
