@@ -177,6 +177,17 @@ export async function fetchRegulationsFromN8n(
     const data: N8nRegulation[] = await response.json();
     console.log("Received data from Supabase:", data.length, "regulations", params?.searchId ? `(search_id: ${params.searchId})` : "(recent)");
     
+    // Fall back to mock data if no results received
+    if (data.length === 0) {
+      console.log("No data from Supabase, falling back to mock data");
+      return getFilteredRegulations(
+        params?.themes || [],
+        params?.languages || ["EN"],
+        params?.dateFrom,
+        params?.dateTo
+      );
+    }
+    
     // Map Supabase response to our Regulation interface
     return data.map((item, index) => mapN8nToRegulation(item, index));
   } catch (error) {

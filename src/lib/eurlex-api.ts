@@ -12,7 +12,8 @@ export interface EURLexSearchParams {
 
 // Generate a unique search ID (short format to match n8n workflow)
 export function generateSearchId(): string {
-  return Math.random().toString(36).substring(2, 10);
+  // return Math.random().toString(36).substring(2, 10);
+  return '9d2urxb5'; // TODO: Hardcoded for testing, uncomment above for prod
 }
 
 export async function triggerEURLexSearch(params: EURLexSearchParams) {
