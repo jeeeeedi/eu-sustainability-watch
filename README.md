@@ -75,11 +75,28 @@ Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/c
 
 ## NOTES:
 
-To manually send `skyvern-result.json` to n8n node `4. Receive Skyvern Results`:
+To manually send search request to node `1. Receive Search Request`
+
+```curl
+curl -X POST "https://jeeeeedi.app.n8n.cloud/webhook/eurlex-search" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "searchId": "test-search-001",
+    "keywords": "sustainability, baltic tourism",
+    "dateFrom": "2024-12-31",
+    "dateTo": "2025-12-17",
+    "languages": ["EN", "SV"],
+    "documentTypes": ["regulation", "directive", "decision"],
+    "excludeConsolidated": false,
+    "excludeCorrigenda": false
+  }'
+```
+
+To manually send `export_20251217.json` to n8n node `4. Receive Skyvern Results`:
 
 ```curl
 curl -X POST \
   https://jeeeeedi.app.n8n.cloud/webhook/skyvern-results \
   -H "Content-Type: application/json" \
-  -d @skyvern-result.json
+  -d @export_20251217.json
 ```
