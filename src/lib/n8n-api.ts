@@ -3,6 +3,7 @@ import { getFilteredRegulations } from "@/lib/mock-regulations";
 
 // n8n webhook response type (matches Supabase documents table)
 interface N8nRegulation {
+  id: number;
   title: string;
   celex_number: string;
   document_type: string;
@@ -17,6 +18,11 @@ interface N8nRegulation {
   implementation_timeline: string | null;
   executive_summary: string | null;
   created_at: string;
+  search_id: string | null;
+  // New fields from n8n processing
+  category: string | null;
+  highlights: string[] | null;
+  tags: string[] | null;
 }
 
 // Supabase configuration
@@ -31,17 +37,21 @@ const N8N_LIVE_RESULTS_URL = import.meta.env.VITE_N8N_LIVE_RESULTS_URL || "https
 
 // Map n8n response to our Regulation interface
 function mapN8nToRegulation(item: N8nRegulation, index: number): Regulation {
-  // Derive category from document type or title
-  const category = deriveCategory(item.title, item.document_type);
+  // Use pre-computed fields from Supabase if available, otherwise derive
+  const category = item.category || deriveCategory(item.title, item.document_type);
   
-  // Extract tags from eurovoc descriptors and affected sectors
-  const tags = [
-    ...(item.eurovoc_descriptors || []),
-    ...(item.affected_sectors || []),
-  ].filter(Boolean);
+  // Use tags from Supabase, or derive from eurovoc/sectors
+  const tags = item.tags && item.tags.length > 0
+    ? item.tags
+    : [
+        ...(item.eurovoc_descriptors || []),
+        ...(item.affected_sectors || []),
+      ].filter(Boolean);
 
-  // Generate highlights from summary (first few sentences)
-  const highlights = extractHighlights(item.summary);
+  // Use highlights from Supabase, or extract from summary
+  const highlights = item.highlights && item.highlights.length > 0
+    ? item.highlights
+    : extractHighlights(item.summary);
 
   return {
     id: item.celex_number || `reg-${index}`,
@@ -98,11 +108,14 @@ function extractHighlights(summary: string): string[] {
 }
 
 export interface FetchRegulationsParams {
+  searchId?: string; // Filter by specific search session
   themes?: string[];
   languages?: string[];
   dateFrom?: Date;
   dateTo?: Date;
   keywords?: string;
+  recentMinutes?: number; // Only fetch rows created within the last N minutes
+  limit?: number; // Limit number of results
 }
 
 export async function fetchRegulationsFromN8n(
@@ -120,10 +133,25 @@ export async function fetchRegulationsFromN8n(
   }
 
   try {
-    // Build Supabase query URL
-    let url = `${SUPABASE_URL}/rest/v1/documents?select=*&order=publication_date.desc`;
+    // Build Supabase query URL - order by created_at to get most recent first
+    let url = `${SUPABASE_URL}/rest/v1/documents?select=*&order=created_at.desc`;
     
-    // Add date filters if provided
+    // If searchId is provided, filter by it (most precise)
+    if (params?.searchId) {
+      url += `&search_id=eq.${params.searchId}`;
+      console.log("Filtering by search_id:", params.searchId);
+    } else {
+      // Fallback: filter by created_at to get only recent rows (default: last 30 minutes)
+      const recentMinutes = params?.recentMinutes ?? 30;
+      const cutoffTime = new Date(Date.now() - recentMinutes * 60 * 1000).toISOString();
+      url += `&created_at=gte.${cutoffTime}`;
+    }
+    
+    // Add limit (default: 50 results)
+    const limit = params?.limit ?? 50;
+    url += `&limit=${limit}`;
+    
+    // Add publication date filters if provided
     if (params?.dateFrom) {
       url += `&publication_date=gte.${params.dateFrom.toISOString().split("T")[0]}`;
     }
@@ -147,7 +175,7 @@ export async function fetchRegulationsFromN8n(
     }
 
     const data: N8nRegulation[] = await response.json();
-    console.log("Received data from Supabase:", data.length, "regulations");
+    console.log("Received data from Supabase:", data.length, "regulations", params?.searchId ? `(search_id: ${params.searchId})` : "(recent)");
     
     // Map Supabase response to our Regulation interface
     return data.map((item, index) => mapN8nToRegulation(item, index));

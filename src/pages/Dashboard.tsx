@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fetchFromN8nWebhook } from "@/lib/n8n-api";
+import { fetchRegulationsFromN8n } from "@/lib/n8n-api";
 import { eurovocThemes, euLanguages } from "@/lib/eurovoc-themes";
 
 const Dashboard = () => {
@@ -19,6 +19,7 @@ const Dashboard = () => {
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
+  const searchId: string | undefined = searchParams.searchId;
   const selectedThemes: string[] = searchParams.themes || [];
   const selectedLanguages: string[] = searchParams.languages || ["EN"];
   const keywords: string = searchParams.keywords || "";
@@ -27,17 +28,20 @@ const Dashboard = () => {
     to: searchParams.dateTo ? new Date(searchParams.dateTo) : undefined,
   };
 
-  // Fetch regulations from n8n webhook
+  // Fetch regulations from Supabase (filtered by searchId)
   const fetchRegulations = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await fetchFromN8nWebhook({
+      const data = await fetchRegulationsFromN8n({
+        searchId, // Filter by this search session
         themes: selectedThemes,
         languages: selectedLanguages,
         dateFrom: dateRange.from,
         dateTo: dateRange.to,
         keywords,
+        recentMinutes: 60, // Fallback if no searchId
+        limit: 100,
       });
       setRegulations(data);
     } catch (err) {

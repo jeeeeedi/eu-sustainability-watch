@@ -1,4 +1,5 @@
 export interface EURLexSearchParams {
+  searchId: string; // Unique ID to track this search session
   keywords: string;
   themes: string[];
   dateFrom: string; // YYYY-MM-DD
@@ -7,6 +8,11 @@ export interface EURLexSearchParams {
   documentTypes: ('regulation' | 'directive' | 'decision')[];
   excludeConsolidated: boolean;
   excludeCorrigenda: boolean;
+}
+
+// Generate a unique search ID (short format to match n8n workflow)
+export function generateSearchId(): string {
+  return Math.random().toString(36).substring(2, 10);
 }
 
 export async function triggerEURLexSearch(params: EURLexSearchParams) {

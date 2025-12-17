@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { triggerEURLexSearch } from "@/lib/eurlex-api";
+import { triggerEURLexSearch, generateSearchId } from "@/lib/eurlex-api";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -38,6 +38,9 @@ const Index = () => {
     setIsSearching(true);
 
     try {
+      // Generate unique search ID for this session
+      const searchId = generateSearchId();
+
       const formattedDateFrom = dateRange?.from
         ? dateRange.from.toISOString().split('T')[0]
         : new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
@@ -47,12 +50,13 @@ const Index = () => {
         : new Date().toISOString().split('T')[0];
 
       const searchParams = {
+        searchId,
         keywords: keywords.trim(),
         themes: selectedThemes,
         dateFrom: formattedDateFrom,
         dateTo: formattedDateTo,
         languages: selectedLanguages,
-        documentTypes: ['regulation', 'directive', 'decision'] as const,
+        documentTypes: ['regulation', 'directive', 'decision'] as ('regulation' | 'directive' | 'decision')[],
         excludeConsolidated: false,
         excludeCorrigenda: false,
       };
@@ -66,6 +70,7 @@ const Index = () => {
 
       navigate("/dashboard", {
         state: {
+          searchId,
           themes: selectedThemes,
           languages: selectedLanguages,
           dateFrom: formattedDateFrom,
