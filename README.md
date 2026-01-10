@@ -92,11 +92,11 @@ curl -X POST "https://jeeeeedi.app.n8n.cloud/webhook/eurlex-search" \
   }'
 ```
 
-To manually send `export_20251217.json` to n8n node `4. Receive Skyvern Results`:
+To manually send `sampledata\export_20251217.json` to n8n node `4. Receive Skyvern Results`:
 
 ```curl
 curl -X POST \
   https://jeeeeedi.app.n8n.cloud/webhook/skyvern-results \
   -H "Content-Type: application/json" \
-  -d @export_20251217.json
+  -d @sampledata\export_20251217.json
 ```
